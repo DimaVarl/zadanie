@@ -1,0 +1,91 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS Сold_Brand;
+DROP TABLE IF EXISTS Сold_VolumeE;
+DROP TABLE IF EXISTS Сold_Fridge;
+DROP TABLE IF EXISTS Сold_Volume;
+SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE Сold_Brand (
+    Сold_Brand_id INT(100),
+    Сold_Brand_name VARCHAR(100),
+    image blob,
+    PRIMARY KEY (Сold_Brand_id)
+    );
+    
+CREATE TABLE Сold_VolumeE (
+    Сold_VolumeE_id INT(100),
+    Сold_VolumeE_name VARCHAR(100),
+    image blob,
+    PRIMARY KEY (Сold_VolumeE_id)
+    );
+
+CREATE TABLE Сold_Volume (
+    Сold_Volume_id INT(100),
+    Сold_Volume_name VARCHAR(100),
+    image blob,
+    PRIMARY KEY (Сold_Volume_id)
+    );
+
+CREATE TABLE Сold_Fridge (
+    Сold_D_name  VARCHAR(100), 
+    Сold_D_brand INT(100),
+    Сold_D_VolumeE     INT(100),
+    Сold_D_volume     INT(100),
+    image blob,
+    INDEX(Сold_D_name),
+         PRIMARY KEY (Сold_D_name),
+         FOREIGN KEY (Сold_D_brand) REFERENCES Сold_Brand (Сold_Brand_id),
+         FOREIGN KEY (Сold_D_VolumeE) REFERENCES Сold_VolumeE (Сold_VolumeE_id),
+         FOREIGN KEY (Сold_D_volume) REFERENCES Сold_Volume (Сold_Volume_id)
+       );
+
+INSERT INTO Сold_Brand (Сold_Brand_id, Сold_Brand_name)
+VALUES  (0, 'Candy'),
+        (1, 'Haier'), 
+        (2, 'Gorenje'), 
+        (3, 'Samsung'),
+        (4, 'Liebherr');
+
+INSERT INTO Сold_Volume (Сold_Volume_id, Сold_Volume_name)
+VALUES  (0, '90 л.'),
+        (1, '100 л.'), 
+        (2, '110 л.'), 
+        (3, '160 л.');
+
+INSERT INTO Сold_VolumeE (Сold_VolumeE_id, Сold_VolumeE_name)
+VALUES  (0, '200 л.'),
+        (1, '220 л.'), 
+        (2, '240 л.'), 
+        (3, '270 л.'),
+        (4, '260 л.'),
+        (5, '280 л.'),
+        (6, '500 л.');
+        
+INSERT INTO Сold_Fridge (Сold_D_name, Сold_D_brand, Сold_D_VolumeE, Сold_D_volume)
+VALUES ('CCRN 6200W',                                 0,  4, 1), 
+        ('CCRN 6200S',                                 0,  4, 1),
+        ('CCRN 6180W',                                 0,  1, 1),
+        ('C2F637CWMV',                                 1,  5, 2),
+        ('Haier HRF 541DM7RU',                         1,  6, 3),
+        ('NRK6202AXL4',                                2,  2, 0),
+        ('NRK6191PS4',                                 2,  0, 0),
+        ('RB37A5000SA',                                3,  3, 1),
+        ('RB37A5200EL Biege',                          3,  3, 1),
+        ('CNsfd 5723-20 001',                          4,  3, 0);
+
+SELECT * FROM Сold_Fridge;
+SELECT * FROM Сold_Brand;
+SELECT * FROM Сold_VolumeE;
+SELECT * FROM Сold_Volume;
+
+SELECT Сold_D_name AS 'Наименование',
+       brand.Сold_Brand_name           AS 'Бренд',
+       VolumeE.Сold_VolumeE_name         AS 'Объём холодильной камеры',
+       volume.Сold_Volume_name         AS 'Объём морозильной камеры'
+FROM   Сold_Fridge AS Fridge
+INNER JOIN  Сold_Brand      AS brand       ON 
+brand.Сold_Brand_id           = Fridge.Сold_D_brand
+INNER JOIN  Сold_VolumeE     AS VolumeE      ON 
+VolumeE.Сold_VolumeE_id         = Fridge.Сold_D_VolumeE
+INNER JOIN  Сold_Volume     AS volume      ON
+volume.Сold_Volume_id         = Fridge.Сold_D_volume;
